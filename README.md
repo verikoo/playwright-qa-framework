@@ -20,6 +20,10 @@ Test automation framework built with **Playwright** and **TypeScript**, covering
 | Checkout | full end-to-end purchase with price/tax verification, required-field validation |
 | API (Restful-Booker) | CRUD, auth tokens, contract tests with Zod schemas, known-bug tracking |
 | Hybrid | cart set up via browser storage, verified in the UI |
+| Visual | login page, products page and product card vs. screenshot baselines |
+| Accessibility | axe scans (WCAG A/AA) on login and products pages, keyboard-only login |
+| Browser features | new tab, nested frames, file upload (The Internet) |
+| Mobile | Pixel 7 emulation: smoke tests + mobile-only checks |
 
 ## Project structure
 ```
@@ -54,6 +58,7 @@ cp .env.example .env   # then fill in the values
 | `npm run test:smoke` | Only `@smoke` tests (quick check) |
 | `npm run test:ui` | Playwright UI Mode |
 | `npm run report` | Open the last HTML report |
+| `npm run test:mobile` | Smoke + mobile tests on an emulated Pixel 7 |
 
 ## Design decisions
 - **Page Object Model**: locators live in one place, so a UI change means one fix
@@ -71,6 +76,6 @@ cp .env.example .env   # then fill in the values
 ## Roadmap
 - [x] UI tests with Page Object Model and fixtures
 - [x] API tests
-- [ ] Network mocking, visual and accessibility tests
+- [x] Network mocking, visual and accessibility tests
 - [ ] CI pipeline with GitHub Actions
 - [ ] AI-assisted test workflow
