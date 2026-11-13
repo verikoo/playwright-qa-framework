@@ -73,6 +73,19 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
+
+    // Mobile: smoke + mobile-only tests on a phone
+    {
+      name: 'mobile-chrome',
+      testDir: './tests/ui',
+      grep: /@mobile|@smoke/,
+      use: {
+        ...devices['Pixel 7'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
+    },
+
     // API tests: no browser, no login session
     {
       name: 'api',
