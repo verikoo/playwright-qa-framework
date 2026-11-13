@@ -9,6 +9,7 @@
     "test:api": "playwright test --project=api",
     "test:smoke": "playwright test --grep @smoke --project=chromium",
     "test:ui": "playwright test --ui",
+    "test:mobile": "playwright test --project=mobile-chrome",
     "report": "playwright show-report"
   },
   "repository": {
