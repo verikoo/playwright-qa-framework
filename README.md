@@ -1,5 +1,5 @@
 # Playwright QA Framework
-
+[![Playwright Tests](https://github.com/verikoo/playwright-qa-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/verikoo/playwright-qa-framework/actions/workflows/playwright.yml)
 Test automation framework built with **Playwright** and **TypeScript**, covering:
 - **UI tests** for [SauceDemo](https://www.saucedemo.com)
 - **API tests** for [Restful-Booker](https://restful-booker.herokuapp.com)
@@ -77,5 +77,5 @@ cp .env.example .env   # then fill in the values
 - [x] UI tests with Page Object Model and fixtures
 - [x] API tests
 - [x] Network mocking, visual and accessibility tests
-- [ ] CI pipeline with GitHub Actions
+- [x] CI pipeline with GitHub Actions
 - [ ] AI-assisted test workflow
