@@ -9,18 +9,32 @@ on:
   schedule:
     - cron: '0 3 * * *'
 
+env:
+  BASE_URL: ${{ secrets.BASE_URL }}
+  STANDARD_USER: ${{ secrets.STANDARD_USER }}
+  LOCKED_USER: ${{ secrets.LOCKED_USER }}
+  PASSWORD: ${{ secrets.PASSWORD }}
+  API_BASE_URL: ${{ secrets.API_BASE_URL }}
+  API_USERNAME: ${{ secrets.API_USERNAME }}
+  API_PASSWORD: ${{ secrets.API_PASSWORD }}
+
 jobs:
-  test:
+  ui-tests:
+    name: UI tests (${{ matrix.project }})
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    env:
-      BASE_URL: ${{ secrets.BASE_URL }}
-      STANDARD_USER: ${{ secrets.STANDARD_USER }}
-      LOCKED_USER: ${{ secrets.LOCKED_USER }}
-      PASSWORD: ${{ secrets.PASSWORD }}
-      API_BASE_URL: ${{ secrets.API_BASE_URL }}
-      API_USERNAME: ${{ secrets.API_USERNAME }}
-      API_PASSWORD: ${{ secrets.API_PASSWORD }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: chromium
+            browser: chromium
+          - project: firefox
+            browser: firefox
+          - project: webkit
+            browser: webkit
+          - project: mobile-chrome
+            browser: chromium
 
     steps:
       - name: Check out the code
@@ -34,16 +48,44 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+      - name: Install browsers (Chromium for the login setup + this job's browser)
+        run: npx playwright install --with-deps chromium ${{ matrix.browser }}
 
-      - name: Run tests (UI on Chromium + API, without visual tests)
-        run: npx playwright test --project=chromium --project=api --grep-invert @visual
+      - name: Run UI tests on ${{ matrix.project }}
+        run: npx playwright test --project=${{ matrix.project }} --grep-invert @visual
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.project }}
+          path: playwright-report/
+          retention-days: 14
+
+  api-tests:
+    name: API tests
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run API tests
+        run: npx playwright test --project=api
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-api
           path: playwright-report/
           retention-days: 14
