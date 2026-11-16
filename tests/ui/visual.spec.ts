@@ -13,7 +13,6 @@ test.describe('Visual regression', { tag: '@visual' }, () => {
     test('products page looks the same', async ({ page, inventoryPage }) => {
         await expect(inventoryPage.title).toHaveText('Products');
 
-        await page.addStyleTag({ content: '[data-test="title"] { color: red !important; }' });
 
         await expect(page).toHaveScreenshot('products-page.png', { fullPage: true });
     });
