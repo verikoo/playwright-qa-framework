@@ -21,7 +21,6 @@ export class CartPage {
         this.itemPrices = page.getByTestId('inventory-item-price');
         this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
         this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
-
     }
 
     /** Remove button for one product row, e.g. removeButton('sauce-labs-backpack'). */
