@@ -7,7 +7,7 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '17 3 * * *'
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -38,10 +38,10 @@ jobs:
 
     steps:
       - name: Check out the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -52,7 +52,7 @@ jobs:
         run: npx playwright install --with-deps chromium ${{ matrix.browser }}
 
       - name: Run UI tests on ${{ matrix.project }}
-        run: npx playwright test --project=${{ matrix.project }} --grep-invert @visual
+        run: npx playwright test --project=${{ matrix.project }} --grep-invert "@visual|@perf"
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
@@ -69,10 +69,10 @@ jobs:
 
     steps:
       - name: Check out the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -89,3 +89,7 @@ jobs:
           name: playwright-report-api
           path: playwright-report/
           retention-days: 14
+
+  perf-tests:
+    name: Performance (nightly)
+    if: github.event_name == 'schedule' ||
