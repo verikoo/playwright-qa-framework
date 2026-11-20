@@ -55,3 +55,22 @@ export async function emulateSlowPhone(page: Page): Promise<void> {
     });
     await client.send('Emulation.setCPUThrottlingRate', { rate: 4 }); // CPU 4x slower
 }
+
+
+export interface ResourceSize {
+    url: string;
+    type: string;   // img, script, css, fetch...
+    kb: number;
+}
+
+/** Lists the largest files the page downloaded, biggest first. */
+export async function heaviestResources(page: Page, count = 5): Promise<ResourceSize[]> {
+    const resources = await page.evaluate(() =>
+        (performance.getEntriesByType('resource') as PerformanceResourceTiming[]).map((r) => ({
+            url: r.name,
+            type: r.initiatorType,
+            kb: Math.round(r.transferSize / 1024),
+        })),
+    );
+    return resources.sort((a, b) => b.kb - a.kb).slice(0, count);
+}
